@@ -1,0 +1,154 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: var(--primary);
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-border: var(--border);
+  --color-quad-a: var(--quad-a);
+  --color-quad-b: var(--quad-b);
+  --color-quad-c: var(--quad-c);
+  --color-quad-d: var(--quad-d);
+}
+
+@layer base {
+  :root {
+    /* 烟雨江南 (Default) */
+    --primary: #8F9B8C;
+    --bg: #F2F0E9;
+    --surface: #E8E6DF;
+    --text: #333333;
+    --text-muted: #7A7A7A;
+    --border: #D1CEC5;
+    
+    /* Quadrant colors (Morandi palette) */
+    --quad-a: #D08C8C; /* Important & Urgent */
+    --quad-b: #8F9B8C; /* Important & Not Urgent */
+    --quad-c: #A4B5C4; /* Not Important & Urgent */
+    --quad-d: #DAB8B8; /* Not Important & Not Urgent */
+  }
+
+  .theme-wilderness {
+    --primary: #6B5B4D;
+    --bg: #2A2A2A;
+    --surface: #3A3A3A;
+    --text: #E0E0E0;
+    --text-muted: #999999;
+    --border: #4A4A4A;
+    --quad-a: #A37B73;
+    --quad-b: #6B5B4D;
+    --quad-c: #7A8B99;
+    --quad-d: #8A7B8A;
+  }
+
+  .theme-twilight {
+    --primary: #B87B6A;
+    --bg: #F9EBEB;
+    --surface: #F2DADA;
+    --text: #4A3B3B;
+    --text-muted: #8A7B7B;
+    --border: #E0C8C8;
+    --quad-a: #C98A8A;
+    --quad-b: #B87B6A;
+    --quad-c: #9AADC2;
+    --quad-d: #C2A3C2;
+  }
+
+  .theme-northern {
+    --primary: #A4B5C4;
+    --bg: #F5F7FA;
+    --surface: #FFFFFF;
+    --text: #2C3E50;
+    --text-muted: #7F8C8D;
+    --border: #E1E8ED;
+    --quad-a: #D09C9C;
+    --quad-b: #A4B5C4;
+    --quad-c: #8F9B8C;
+    --quad-d: #D4C4A1;
+  }
+
+  .theme-matcha {
+    --primary: #7A9A75;
+    --bg: #F6F8F4;
+    --surface: #FFFFFF;
+    --text: #353D33;
+    --text-muted: #94A38F;
+    --border: #E8ECE5;
+    --quad-a: #C28E8E;
+    --quad-b: #7A9A75;
+    --quad-c: #8FA3B8;
+    --quad-d: #C9B89A;
+  }
+
+  .theme-lavender {
+    --primary: #8E84A3;
+    --bg: #F8F7FA;
+    --surface: #FFFFFF;
+    --text: #3D3947;
+    --text-muted: #9A95A5;
+    --border: #EAE8EF;
+    --quad-a: #C49797;
+    --quad-b: #8E84A3;
+    --quad-c: #9EADC2;
+    --quad-d: #D1C4A3;
+  }
+
+  .theme-rose {
+    --primary: #C48B8D;
+    --bg: #FDF8F6;
+    --surface: #FFFFFF;
+    --text: #4A3B3C;
+    --text-muted: #B89C9D;
+    --border: #F3E8E6;
+    --quad-a: #D29191;
+    --quad-b: #C48B8D;
+    --quad-c: #A8B8C1;
+    --quad-d: #E2D1C3;
+  }
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', system-ui, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
+  }
+}
