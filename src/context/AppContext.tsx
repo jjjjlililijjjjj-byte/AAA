@@ -73,7 +73,7 @@ const defaultMedals: Medal[] = [
   { id: 'm1', name: '晨曦使者', description: '连续 7 天在 8:00 前完成首个任务', icon: 'Sunrise', unlocked: false },
   { id: 'm2', name: '深海潜行', description: '专注时长累计达到 100 小时', icon: 'Waves', unlocked: false },
   { id: 'm3', name: '四象平衡', description: 'A/B/C/D 四类任务完成率均达 80%', icon: 'Grid', unlocked: false },
-  { id: 'm4', name: '时光旅人', description: '账号注册满一周年 (500 种子兑换)', icon: 'Clock', unlocked: false, cost: 500 },
+  { id: 'm4', name: '岁月静好', description: '账号注册满一周年 (500 种子兑换)', icon: 'Clock', unlocked: false, cost: 500 },
   { id: 'm5', name: '莫兰迪匠心', description: '收集满 5 套外观主题 (1000 种子兑换)', icon: 'Palette', unlocked: false, cost: 1000 },
 ];
 
@@ -95,7 +95,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     theme: 'default',
     medals: defaultMedals,
     profile: {
-      name: '时光旅人',
+      name: '探索者',
     }
   });
 

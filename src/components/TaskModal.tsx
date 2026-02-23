@@ -114,7 +114,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
         >
           <div className="flex justify-between items-center p-6 border-b border-border flex-shrink-0">
             <h2 className="text-xl font-bold">{initialTask ? '编辑任务' : '新建任务'}</h2>
-            <button onClick={onClose} className="text-text-muted hover:text-text transition-colors">
+            <button onClick={onClose} className="text-text-muted hover:text-text transition-colors p-2 -mr-2">
               <X size={24} />
             </button>
           </div>

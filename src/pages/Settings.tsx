@@ -125,7 +125,7 @@ export const Settings: React.FC = () => {
                     )}
                   </div>
                   {!isEditingProfile && (
-                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
                       <Upload className="text-white md:w-6 md:h-6" size={20} />
                     </div>
                   )}

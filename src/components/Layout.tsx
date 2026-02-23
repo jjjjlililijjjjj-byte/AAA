@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { BottomNav } from './BottomNav';
+import { TopNav } from './TopNav';
 import { RewardPopup } from './RewardPopup';
 import { motion } from 'motion/react';
 
@@ -11,7 +12,8 @@ export const Layout: React.FC = () => {
       <div className="hidden md:block">
         <Sidebar />
       </div>
-      <main className="flex-1 overflow-y-auto relative pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-0">
+      <TopNav />
+      <main className="flex-1 overflow-y-auto relative pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-0 pt-[calc(env(safe-area-inset-top)+4rem)] md:pt-0">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}

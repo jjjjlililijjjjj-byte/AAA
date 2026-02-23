@@ -8,7 +8,7 @@ import { zhCN } from 'date-fns/locale';
 import { TaskModal } from '../components/TaskModal';
 
 export const Home: React.FC = () => {
-  const { tasks, updateTask, addTask, deleteTask } = useAppContext();
+  const { tasks, updateTask, addTask, deleteTask, userStats } = useAppContext();
   const [viewMode, setViewMode] = useState<'timeline' | 'quadrant'>('timeline');
   const [daysView, setDaysView] = useState<'month' | 1 | 2 | 3 | 7>('month');
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -152,25 +152,25 @@ export const Home: React.FC = () => {
         days.push(
           <div
             className={cn(
-              "min-h-[120px] p-2 border-r border-b border-border/50 transition-colors hover:bg-surface/50 cursor-pointer relative group",
+              "min-h-[80px] md:min-h-[120px] p-1 md:p-2 border-r border-b border-border/50 transition-colors hover:bg-surface/50 cursor-pointer relative group",
               !isSameMonth(day, monthStart) ? "bg-bg/50 text-text-muted/50" : "bg-surface",
               isSameDay(day, new Date()) ? "bg-primary/5" : ""
             )}
             key={day.toISOString()}
             onClick={() => openTaskModal(undefined, cloneDay)}
           >
-            <div className="flex justify-between items-start mb-2">
+            <div className="flex justify-between items-start mb-1 md:mb-2">
               <span className={cn(
-                "w-7 h-7 flex items-center justify-center rounded-full text-sm font-medium",
+                "w-6 h-6 md:w-7 md:h-7 flex items-center justify-center rounded-full text-xs md:text-sm font-medium",
                 isSameDay(day, new Date()) ? "bg-primary text-white" : "text-text-muted group-hover:text-primary transition-colors"
               )}>
                 {formattedDate}
               </span>
-              <button className="opacity-0 group-hover:opacity-100 text-primary p-1 hover:bg-primary/10 rounded-md transition-all">
-                <Plus size={14} />
+              <button className="md:opacity-0 md:group-hover:opacity-100 text-primary p-1 md:p-2 hover:bg-primary/10 rounded-md transition-all">
+                <Plus size={14} className="md:w-4 md:h-4" />
               </button>
             </div>
-            <div className="space-y-1 overflow-y-auto max-h-[80px] scrollbar-hide">
+            <div className="space-y-1 overflow-y-auto max-h-[50px] md:max-h-[80px] scrollbar-hide">
               {dayTasks.map(task => {
                 const quadColors = {
                   A: 'bg-[var(--quad-a)]/20 text-[var(--quad-a)] border-[var(--quad-a)]/30',
@@ -252,13 +252,13 @@ export const Home: React.FC = () => {
           </div>
 
           {/* Days columns */}
-          <div className="flex-1 flex divide-x divide-border/50">
+          <div className="flex-1 flex divide-x divide-border/50 overflow-x-auto scrollbar-hide">
             {days.map(day => {
               const dayTasks = displayTasks.filter(t => t.date === format(day, 'yyyy-MM-dd'));
               return (
                 <div 
                   key={day.toISOString()} 
-                  className="flex-1 relative group cursor-pointer hover:bg-bg/30 transition-colors"
+                  className="flex-1 min-w-[100px] md:min-w-0 relative group cursor-pointer hover:bg-bg/30 transition-colors"
                   onClick={() => openTaskModal(undefined, day)}
                 >
                   <div className="text-center pb-4 border-b border-border/50 sticky top-0 bg-surface z-10">
@@ -417,7 +417,7 @@ export const Home: React.FC = () => {
     <div className="h-full flex flex-col">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">你好，时光旅人</h1>
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">你好，{userStats.profile.name}</h1>
           <p className="text-sm md:text-base text-text-muted">今天是 {format(new Date(), 'yyyy年MM月dd日', { locale: zhCN })}，专注当下。</p>
         </div>
         <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
@@ -469,14 +469,14 @@ export const Home: React.FC = () => {
             ))}
           </div>
           <div className="flex items-center justify-between md:justify-center gap-2 md:gap-4 bg-surface px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border">
-            <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronLeft size={18} className="md:w-5 md:h-5" />
+            <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+              <ChevronLeft size={20} className="md:w-5 md:h-5" />
             </button>
             <span className="font-medium text-sm md:text-lg min-w-[100px] md:min-w-[120px] text-center">
               {format(currentDate, 'yyyy年 MM月', { locale: zhCN })}
             </span>
-            <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronRight size={18} className="md:w-5 md:h-5" />
+            <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+              <ChevronRight size={20} className="md:w-5 md:h-5" />
             </button>
           </div>
         </div>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { BarChart2, Calendar as CalendarIcon, ChevronDown, Activity, Clock, Target, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useAppContext } from '../context/AppContext';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
@@ -11,6 +11,8 @@ export const Stats: React.FC = () => {
   const { tasks, userStats } = useAppContext();
   const [timeRange, setTimeRange] = useState<'week' | 'month'>('week');
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const nextPeriod = () => {
     if (timeRange === 'week') {
@@ -124,44 +126,68 @@ export const Stats: React.FC = () => {
         </div>
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 md:gap-4 w-full md:w-auto">
           <div className="flex items-center justify-between sm:justify-center gap-2 md:gap-4 bg-surface px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border">
-            <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronLeft size={18} className="md:w-5 md:h-5" />
+            <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+              <ChevronLeft size={20} className="md:w-5 md:h-5" />
             </button>
             <span className="font-medium text-sm md:text-base min-w-[140px] md:min-w-[180px] text-center">
               {getPeriodLabel()}
             </span>
-            <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronRight size={18} className="md:w-5 md:h-5" />
+            <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+              <ChevronRight size={20} className="md:w-5 md:h-5" />
             </button>
           </div>
-          <div className="relative group">
-            <button className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border rounded-xl text-text hover:border-primary transition-colors text-sm md:text-base">
+          <div className="relative">
+            <button 
+              onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2 bg-surface border border-border rounded-xl text-text hover:border-primary transition-colors text-sm md:text-base"
+            >
               <CalendarIcon size={16} className="md:w-[18px] md:h-[18px]" />
               {timeRange === 'week' ? '每周数据' : '每月数据'}
-              <ChevronDown size={14} className="md:w-4 md:h-4" />
+              <ChevronDown size={14} className={cn("md:w-4 md:h-4 transition-transform", isDropdownOpen ? "rotate-180" : "")} />
             </button>
-            <div className="absolute right-0 top-full pt-2 w-full sm:w-32 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-10">
-              <div className="bg-surface border border-border rounded-xl shadow-lg overflow-hidden">
-                <button 
-                  onClick={() => setTimeRange('week')}
-                  className={cn(
-                    "w-full text-left px-4 py-2 text-sm hover:bg-bg transition-colors",
-                    timeRange === 'week' ? "text-primary font-medium bg-primary/5" : "text-text"
-                  )}
-                >
-                  每周数据
-                </button>
-                <button 
-                  onClick={() => setTimeRange('month')}
-                  className={cn(
-                    "w-full text-left px-4 py-2 text-sm hover:bg-bg transition-colors",
-                    timeRange === 'month' ? "text-primary font-medium bg-primary/5" : "text-text"
-                  )}
-                >
-                  每月数据
-                </button>
-              </div>
-            </div>
+            <AnimatePresence>
+              {isDropdownOpen && (
+                <>
+                  <div 
+                    className="fixed inset-0 z-10" 
+                    onClick={() => setIsDropdownOpen(false)}
+                  />
+                  <motion.div 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    className="absolute right-0 top-full pt-2 w-full sm:w-32 z-20"
+                  >
+                    <div className="bg-surface border border-border rounded-xl shadow-lg overflow-hidden">
+                      <button 
+                        onClick={() => {
+                          setTimeRange('week');
+                          setIsDropdownOpen(false);
+                        }}
+                        className={cn(
+                          "w-full text-left px-4 py-3 md:py-2 text-sm hover:bg-bg transition-colors",
+                          timeRange === 'week' ? "text-primary font-medium bg-primary/5" : "text-text"
+                        )}
+                      >
+                        每周数据
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setTimeRange('month');
+                          setIsDropdownOpen(false);
+                        }}
+                        className={cn(
+                          "w-full text-left px-4 py-3 md:py-2 text-sm hover:bg-bg transition-colors",
+                          timeRange === 'month' ? "text-primary font-medium bg-primary/5" : "text-text"
+                        )}
+                      >
+                        每月数据
+                      </button>
+                    </div>
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </header>

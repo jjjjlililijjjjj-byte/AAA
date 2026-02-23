@@ -51,9 +51,9 @@ export const Goals: React.FC = () => {
       >
         <button
           onClick={() => handleOpenModal(goal)}
-          className="absolute top-4 right-4 p-2 text-text-muted hover:text-primary hover:bg-primary/10 rounded-lg opacity-0 group-hover:opacity-100 transition-all"
+          className="absolute top-4 right-4 p-3 text-text-muted hover:text-primary hover:bg-primary/10 rounded-lg md:opacity-0 md:group-hover:opacity-100 transition-all"
         >
-          <Edit2 size={16} />
+          <Edit2 size={18} />
         </button>
         <div className="flex justify-between items-start mb-4">
           <div className="flex items-center gap-3">

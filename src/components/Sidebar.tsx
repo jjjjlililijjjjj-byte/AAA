@@ -16,15 +16,15 @@ export const Sidebar: React.FC = () => {
 
   return (
     <aside className="w-64 h-[100dvh] bg-surface border-r border-border flex flex-col transition-colors duration-300">
-      <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden">
-          {userStats.profile.avatar ? (
-            <img src={userStats.profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
-          ) : (
-            userStats.profile.name.charAt(0)
-          )}
+      <div className="p-6 pb-2">
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm transform -rotate-6">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transform rotate-6">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+          </div>
+          <span className="font-bold text-xl tracking-tight text-text">SereneFlow</span>
         </div>
-        <span className="font-semibold text-lg tracking-wider truncate">{userStats.profile.name}</span>
       </div>
 
       <div className="px-6 pb-6">

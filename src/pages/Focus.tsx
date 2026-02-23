@@ -176,9 +176,9 @@ export const Focus: React.FC = () => {
             </div>
             {status !== 'running' && (
               <div className="flex items-center justify-center gap-2 md:gap-4 text-text-muted text-sm md:text-base">
-                <button onClick={() => handleDurationChange(duration - 5)} className="hover:text-primary transition-colors w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-surface">-</button>
+                <button onClick={() => handleDurationChange(duration - 5)} className="hover:text-primary transition-colors w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full hover:bg-surface">-</button>
                 <span className="font-medium w-12 md:w-16 text-center">{duration} min</span>
-                <button onClick={() => handleDurationChange(duration + 5)} className="hover:text-primary transition-colors w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-surface">+</button>
+                <button onClick={() => handleDurationChange(duration + 5)} className="hover:text-primary transition-colors w-10 h-10 md:w-12 md:h-12 flex items-center justify-center rounded-full hover:bg-surface">+</button>
               </div>
             )}
           </div>
