@@ -64,7 +64,7 @@ export const Focus: React.FC = () => {
   const progress = ((duration * 60 - timeLeft) / (duration * 60)) * 100;
 
   return (
-    <div className="h-full flex flex-col items-center justify-center relative overflow-hidden rounded-3xl bg-surface border border-border shadow-sm transition-colors duration-1000">
+    <div className="h-full flex flex-col items-center justify-center relative overflow-hidden rounded-2xl md:rounded-3xl bg-surface border border-border shadow-sm transition-colors duration-1000">
       {/* Dynamic Background elements - Only visible when active */}
       <AnimatePresence>
         {status === 'running' && (
@@ -75,23 +75,23 @@ export const Focus: React.FC = () => {
             transition={{ duration: 1 }}
             className="absolute inset-0 pointer-events-none"
           >
-            <div className="absolute top-1/4 left-1/4 w-[40rem] h-[40rem] rounded-full mix-blend-multiply filter blur-[100px] animate-blob bg-[var(--quad-a)]" />
-            <div className="absolute top-1/3 right-1/4 w-[40rem] h-[40rem] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-2000 bg-[var(--quad-b)]" />
-            <div className="absolute bottom-1/4 left-1/3 w-[40rem] h-[40rem] rounded-full mix-blend-multiply filter blur-[100px] animate-blob animation-delay-4000 bg-[var(--quad-c)]" />
+            <div className="absolute top-1/4 left-1/4 w-[20rem] md:w-[40rem] h-[20rem] md:h-[40rem] rounded-full mix-blend-multiply filter blur-[50px] md:blur-[100px] animate-blob bg-[var(--quad-a)]" />
+            <div className="absolute top-1/3 right-1/4 w-[20rem] md:w-[40rem] h-[20rem] md:h-[40rem] rounded-full mix-blend-multiply filter blur-[50px] md:blur-[100px] animate-blob animation-delay-2000 bg-[var(--quad-b)]" />
+            <div className="absolute bottom-1/4 left-1/3 w-[20rem] md:w-[40rem] h-[20rem] md:h-[40rem] rounded-full mix-blend-multiply filter blur-[50px] md:blur-[100px] animate-blob animation-delay-4000 bg-[var(--quad-c)]" />
           </motion.div>
         )}
       </AnimatePresence>
       <div className="absolute inset-0 bg-surface/40 pointer-events-none backdrop-blur-[2px]" />
 
-      <div className="absolute top-8 right-8 z-20">
+      <div className="absolute top-4 right-4 md:top-8 md:right-8 z-20">
         <button 
           onClick={() => setShowSettings(!showSettings)}
           className={cn(
-            "p-3 rounded-xl border transition-all backdrop-blur-sm",
+            "p-2 md:p-3 rounded-xl border transition-all backdrop-blur-sm",
             showSettings ? "bg-primary text-white border-primary" : "bg-surface/50 text-text-muted border-border hover:bg-surface"
           )}
         >
-          <Settings2 size={24} />
+          <Settings2 size={20} className="md:w-6 md:h-6" />
         </button>
       </div>
 
@@ -101,17 +101,17 @@ export const Focus: React.FC = () => {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="absolute top-24 right-8 z-20 bg-surface/90 backdrop-blur-md p-6 rounded-3xl border border-border shadow-xl w-80"
+            className="absolute top-16 right-4 md:top-24 md:right-8 z-20 bg-surface/90 backdrop-blur-md p-4 md:p-6 rounded-2xl md:rounded-3xl border border-border shadow-xl w-[calc(100vw-2rem)] max-w-[320px]"
           >
             <div>
-              <h3 className="text-sm font-bold text-text-muted mb-3 uppercase tracking-wider">专注时长</h3>
+              <h3 className="text-xs md:text-sm font-bold text-text-muted mb-2 md:mb-3 uppercase tracking-wider">专注时长</h3>
               <div className="grid grid-cols-4 gap-2 mb-3">
                 {[15, 25, 45, 60].map(m => (
                   <button
                     key={m}
                     onClick={() => { setDuration(m); setStatus('idle'); }}
                     className={cn(
-                      "py-2 rounded-lg text-sm font-medium transition-colors",
+                      "py-1.5 md:py-2 rounded-lg text-xs md:text-sm font-medium transition-colors",
                       duration === m ? "bg-primary text-white" : "bg-bg text-text-muted hover:bg-primary/10 hover:text-primary"
                     )}
                   >
@@ -132,9 +132,9 @@ export const Focus: React.FC = () => {
                       setStatus('idle');
                     }
                   }}
-                  className="w-full bg-bg border border-border rounded-lg px-3 py-2 text-text focus:outline-none focus:border-primary transition-colors"
+                  className="w-full bg-bg border border-border rounded-lg px-2 md:px-3 py-1.5 md:py-2 text-sm md:text-base text-text focus:outline-none focus:border-primary transition-colors"
                 />
-                <span className="text-text-muted text-sm whitespace-nowrap">分钟</span>
+                <span className="text-text-muted text-xs md:text-sm whitespace-nowrap">分钟</span>
               </div>
             </div>
           </motion.div>
@@ -142,9 +142,9 @@ export const Focus: React.FC = () => {
       </AnimatePresence>
 
       <div className="z-10 flex flex-col items-center">
-        <div className="relative w-80 h-80 flex items-center justify-center mb-16">
+        <div className="relative w-64 h-64 md:w-80 md:h-80 flex items-center justify-center mb-12 md:mb-16">
           {/* Progress ring */}
-          <svg className="absolute inset-0 w-full h-full transform -rotate-90">
+          <svg viewBox="0 0 320 320" className="absolute inset-0 w-full h-full transform -rotate-90">
             <circle
               cx="160"
               cy="160"
@@ -171,38 +171,38 @@ export const Focus: React.FC = () => {
           </svg>
 
           <div className="text-center">
-            <div className="text-7xl font-mono font-light tracking-tighter mb-4 text-text drop-shadow-sm">
+            <div className="text-5xl md:text-7xl font-mono font-light tracking-tighter mb-2 md:mb-4 text-text drop-shadow-sm">
               {formatTime(timeLeft)}
             </div>
             {status !== 'running' && (
-              <div className="flex items-center justify-center gap-4 text-text-muted">
-                <button onClick={() => handleDurationChange(duration - 5)} className="hover:text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface">-</button>
-                <span className="font-medium w-16 text-center">{duration} min</span>
-                <button onClick={() => handleDurationChange(duration + 5)} className="hover:text-primary transition-colors w-8 h-8 flex items-center justify-center rounded-full hover:bg-surface">+</button>
+              <div className="flex items-center justify-center gap-2 md:gap-4 text-text-muted text-sm md:text-base">
+                <button onClick={() => handleDurationChange(duration - 5)} className="hover:text-primary transition-colors w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-surface">-</button>
+                <span className="font-medium w-12 md:w-16 text-center">{duration} min</span>
+                <button onClick={() => handleDurationChange(duration + 5)} className="hover:text-primary transition-colors w-6 h-6 md:w-8 md:h-8 flex items-center justify-center rounded-full hover:bg-surface">+</button>
               </div>
             )}
           </div>
         </div>
 
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-6 md:gap-8">
           <button
             onClick={toggleTimer}
-            className="w-24 h-24 rounded-full bg-primary text-white flex items-center justify-center shadow-xl hover:bg-opacity-90 hover:scale-105 transition-all"
+            className="w-20 h-20 md:w-24 md:h-24 rounded-full bg-primary text-white flex items-center justify-center shadow-xl hover:bg-opacity-90 hover:scale-105 transition-all"
           >
-            {status === 'running' ? <Pause size={40} /> : <Play size={40} className="ml-2" />}
+            {status === 'running' ? <Pause size={32} className="md:w-10 md:h-10" /> : <Play size={32} className="ml-1 md:ml-2 md:w-10 md:h-10" />}
           </button>
 
           <button
             onClick={stopTimer}
             disabled={status === 'idle'}
             className={cn(
-              "w-14 h-14 rounded-full border flex items-center justify-center transition-all backdrop-blur-sm",
+              "w-12 h-12 md:w-14 md:h-14 rounded-full border flex items-center justify-center transition-all backdrop-blur-sm",
               status === 'idle'
                 ? "bg-surface/50 border-border/50 text-border/50 cursor-not-allowed"
                 : "bg-surface/80 border-border text-text-muted hover:text-red-500 hover:border-red-500"
             )}
           >
-            <Square size={20} />
+            <Square size={16} className="md:w-5 md:h-5" />
           </button>
         </div>
       </div>

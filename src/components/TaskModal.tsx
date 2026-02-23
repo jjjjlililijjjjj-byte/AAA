@@ -132,7 +132,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-text-muted mb-2">日期</label>
                 <input
@@ -207,7 +207,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                       key={index}
                       onClick={() => toggleCustomDay(index)}
                       className={cn(
-                        "w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium transition-colors",
+                        "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center text-xs md:text-sm font-medium transition-colors",
                         repeatCustomDays.includes(index)
                           ? "bg-primary text-white"
                           : "bg-bg border border-border text-text-muted hover:border-primary"

@@ -344,39 +344,39 @@ export const Home: React.FC = () => {
     ];
 
     return (
-      <div className="flex-1 grid grid-cols-2 grid-rows-2 gap-6 h-full">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-2 grid-rows-none md:grid-rows-2 gap-4 md:gap-6 h-full overflow-y-auto pb-4 md:pb-0">
         {quads.map(q => (
-          <div key={q.id} className={cn("bg-surface rounded-3xl p-6 border-t-4 shadow-sm flex flex-col", q.color)}>
+          <div key={q.id} className={cn("bg-surface rounded-3xl p-4 md:p-6 border-t-4 shadow-sm flex flex-col min-h-[300px]", q.color)}>
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-lg">{q.label}</h3>
-              <span className="text-sm font-medium text-text-muted bg-bg px-2 py-1 rounded-lg">
+              <h3 className="font-bold text-base md:text-lg">{q.label}</h3>
+              <span className="text-xs md:text-sm font-medium text-text-muted bg-bg px-2 py-1 rounded-lg">
                 象限 {q.id}
               </span>
             </div>
-            <div className="flex-1 overflow-y-auto space-y-3 pr-2">
+            <div className="flex-1 overflow-y-auto space-y-2 md:space-y-3 pr-1 md:pr-2">
               {todayTasks.filter(t => t.quadrant === q.id).map(task => (
                 <div
                   key={task.id}
-                  className="flex items-center justify-between p-4 bg-bg rounded-2xl border border-border hover:border-primary transition-colors cursor-pointer group"
+                  className="flex items-center justify-between p-3 md:p-4 bg-bg rounded-2xl border border-border hover:border-primary transition-colors cursor-pointer group"
                   onClick={() => openTaskModal(task)}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 md:gap-3 min-w-0">
                     <button 
-                      className={cn("text-text-muted hover:text-primary transition-colors", task.completed && "text-primary")}
+                      className={cn("text-text-muted hover:text-primary transition-colors flex-shrink-0", task.completed && "text-primary")}
                       onClick={(e) => handleToggleTask(task, e)}
                     >
-                      {task.completed ? <CheckCircle2 size={20} /> : <Circle size={20} />}
+                      {task.completed ? <CheckCircle2 size={18} className="md:w-5 md:h-5" /> : <Circle size={18} className="md:w-5 md:h-5" />}
                     </button>
-                    <span className={cn("font-medium", task.completed && "line-through text-text-muted")}>
+                    <span className={cn("font-medium text-sm md:text-base truncate", task.completed && "line-through text-text-muted")}>
                       {task.title}
                     </span>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
                     {task.repeat && task.repeat !== 'none' && (
-                      <Repeat size={14} className="text-text-muted opacity-50" />
+                      <Repeat size={12} className="md:w-[14px] md:h-[14px] text-text-muted opacity-50" />
                     )}
                     {task.startTime && (
-                      <span className="text-xs text-text-muted font-mono bg-surface px-2 py-1 rounded-md border border-border group-hover:border-primary/30 transition-colors">
+                      <span className="text-[10px] md:text-xs text-text-muted font-mono bg-surface px-1.5 md:px-2 py-0.5 md:py-1 rounded-md border border-border group-hover:border-primary/30 transition-colors">
                         {task.startTime}
                       </span>
                     )}
@@ -385,10 +385,10 @@ export const Home: React.FC = () => {
               ))}
               <button 
                 onClick={() => openTaskModal(undefined, currentDate)}
-                className="w-full py-3 border-2 border-dashed border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary transition-colors flex items-center justify-center gap-2"
+                className="w-full py-2 md:py-3 border-2 border-dashed border-border rounded-2xl text-text-muted hover:text-primary hover:border-primary transition-colors flex items-center justify-center gap-2"
               >
-                <Plus size={18} />
-                <span className="font-medium text-sm">添加任务</span>
+                <Plus size={16} className="md:w-[18px] md:h-[18px]" />
+                <span className="font-medium text-xs md:text-sm">添加任务</span>
               </button>
             </div>
           </div>
@@ -415,52 +415,52 @@ export const Home: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-4xl font-light tracking-tight mb-2">你好，时光旅人</h1>
-          <p className="text-text-muted">今天是 {format(new Date(), 'yyyy年MM月dd日', { locale: zhCN })}，专注当下。</p>
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">你好，时光旅人</h1>
+          <p className="text-sm md:text-base text-text-muted">今天是 {format(new Date(), 'yyyy年MM月dd日', { locale: zhCN })}，专注当下。</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
           <div className="flex bg-surface p-1 rounded-full border border-border shadow-sm">
             <button
               onClick={() => setViewMode('timeline')}
               className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all",
+                "flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all",
                 viewMode === 'timeline' ? "bg-primary text-white shadow-md" : "text-text-muted hover:text-text"
               )}
             >
-              <CalendarIcon size={18} />
+              <CalendarIcon size={16} className="md:w-[18px] md:h-[18px]" />
               日期流
             </button>
             <button
               onClick={() => setViewMode('quadrant')}
               className={cn(
-                "flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-medium transition-all",
+                "flex items-center gap-1.5 md:gap-2 px-3 md:px-5 py-2 md:py-2.5 rounded-full text-xs md:text-sm font-medium transition-all",
                 viewMode === 'quadrant' ? "bg-primary text-white shadow-md" : "text-text-muted hover:text-text"
               )}
             >
-              <Grid size={18} />
+              <Grid size={16} className="md:w-[18px] md:h-[18px]" />
               四象限
             </button>
           </div>
           <button 
             onClick={() => openTaskModal()}
-            className="w-12 h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-all hover:scale-105"
+            className="w-10 h-10 md:w-12 md:h-12 bg-primary text-white rounded-full flex items-center justify-center shadow-lg hover:bg-opacity-90 transition-all hover:scale-105 flex-shrink-0"
           >
-            <Plus size={24} />
+            <Plus size={20} className="md:w-6 md:h-6" />
           </button>
         </div>
       </header>
 
       {viewMode === 'timeline' && (
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex gap-2 bg-bg p-1 rounded-full border border-border">
+        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 mb-4 md:mb-6">
+          <div className="flex gap-1 md:gap-2 bg-bg p-1 rounded-full border border-border overflow-x-auto scrollbar-hide">
             {['month', 1, 2, 3, 7].map(d => (
               <button
                 key={d}
                 onClick={() => setDaysView(d as any)}
                 className={cn(
-                  "px-4 py-1.5 rounded-full text-sm font-medium transition-all",
+                  "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap",
                   daysView === d ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text"
                 )}
               >
@@ -468,15 +468,15 @@ export const Home: React.FC = () => {
               </button>
             ))}
           </div>
-          <div className="flex items-center gap-4 bg-surface px-4 py-2 rounded-full border border-border">
+          <div className="flex items-center justify-between md:justify-center gap-2 md:gap-4 bg-surface px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border">
             <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronLeft size={20} />
+              <ChevronLeft size={18} className="md:w-5 md:h-5" />
             </button>
-            <span className="font-medium text-lg min-w-[120px] text-center">
+            <span className="font-medium text-sm md:text-lg min-w-[100px] md:min-w-[120px] text-center">
               {format(currentDate, 'yyyy年 MM月', { locale: zhCN })}
             </span>
             <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-1">
-              <ChevronRight size={20} />
+              <ChevronRight size={18} className="md:w-5 md:h-5" />
             </button>
           </div>
         </div>

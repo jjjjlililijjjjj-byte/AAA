@@ -37,11 +37,17 @@ export interface Medal {
   cost?: number;
 }
 
+export interface UserProfile {
+  name: string;
+  avatar?: string;
+}
+
 export interface UserStats {
   seeds: number;
   focusTime: number; // in minutes
   theme: 'default' | 'wilderness' | 'twilight' | 'northern' | 'matcha' | 'lavender' | 'rose';
   medals: Medal[];
+  profile: UserProfile;
 }
 
 interface AppContextType {
@@ -58,6 +64,7 @@ interface AppContextType {
   addSeeds: (amount: number) => void;
   setTheme: (theme: UserStats['theme']) => void;
   unlockMedal: (medalId: string) => void;
+  updateProfile: (profile: Partial<UserProfile>) => void;
   rewardPopup: { show: boolean; increment: number; seeds: number; goal?: Goal } | null;
   setRewardPopup: (popup: { show: boolean; increment: number; seeds: number; goal?: Goal } | null) => void;
 }
@@ -87,6 +94,9 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     focusTime: 340,
     theme: 'default',
     medals: defaultMedals,
+    profile: {
+      name: '时光旅人',
+    }
   });
 
   const [rewardPopup, setRewardPopup] = useState<{ show: boolean; increment: number; seeds: number; goal?: Goal } | null>(null);
@@ -94,6 +104,13 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   useEffect(() => {
     document.documentElement.className = userStats.theme === 'default' ? '' : `theme-${userStats.theme}`;
   }, [userStats.theme]);
+
+  const updateProfile = (profileUpdates: Partial<UserProfile>) => {
+    setUserStats(prev => ({
+      ...prev,
+      profile: { ...prev.profile, ...profileUpdates }
+    }));
+  };
 
   const addTask = (task: Omit<Task, 'id'>) => {
     setTasks([...tasks, { ...task, id: Date.now().toString() }]);
@@ -179,7 +196,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       tasks, goals, userStats,
       addTask, updateTask, deleteTask,
       addGoal, updateGoal, deleteGoal,
-      addFocusTime, addSeeds, setTheme, unlockMedal,
+      addFocusTime, addSeeds, setTheme, unlockMedal, updateProfile,
       rewardPopup, setRewardPopup
     }}>
       {children}

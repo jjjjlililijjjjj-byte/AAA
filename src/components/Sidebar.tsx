@@ -17,10 +17,14 @@ export const Sidebar: React.FC = () => {
   return (
     <aside className="w-64 h-screen bg-surface border-r border-border flex flex-col transition-colors duration-300">
       <div className="p-6 flex items-center gap-3">
-        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold">
-          悦
+        <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden">
+          {userStats.profile.avatar ? (
+            <img src={userStats.profile.avatar} alt="Avatar" className="w-full h-full object-cover" />
+          ) : (
+            userStats.profile.name.charAt(0)
+          )}
         </div>
-        <span className="font-semibold text-lg tracking-wider">SereneFlow</span>
+        <span className="font-semibold text-lg tracking-wider truncate">{userStats.profile.name}</span>
       </div>
 
       <div className="px-6 pb-6">

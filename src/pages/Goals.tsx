@@ -97,40 +97,40 @@ export const Goals: React.FC = () => {
 
   return (
     <div className="h-full flex flex-col">
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
-          <h1 className="text-4xl font-light tracking-tight mb-2">长期目标</h1>
-          <p className="text-text-muted">专注当下，成就未来。</p>
+          <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">长期目标</h1>
+          <p className="text-sm md:text-base text-text-muted">专注当下，成就未来。</p>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4 w-full md:w-auto justify-between md:justify-end">
           <button
             onClick={() => setHideCompleted(!hideCompleted)}
             className={cn(
-              "flex items-center gap-2 px-4 py-2 rounded-xl border transition-colors",
+              "flex items-center gap-1.5 md:gap-2 px-3 md:px-4 py-2 rounded-xl border transition-colors text-sm md:text-base",
               hideCompleted ? "bg-primary text-white border-primary" : "bg-surface text-text-muted border-border hover:border-primary"
             )}
           >
-            <Filter size={18} />
+            <Filter size={16} className="md:w-[18px] md:h-[18px]" />
             隐藏已完成
           </button>
           <button 
             onClick={() => handleOpenModal()}
-            className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-xl shadow-md hover:bg-opacity-90 transition-all hover:scale-105"
+            className="flex items-center gap-1.5 md:gap-2 px-4 md:px-5 py-2 md:py-2.5 bg-primary text-white rounded-xl shadow-md hover:bg-opacity-90 transition-all hover:scale-105 text-sm md:text-base whitespace-nowrap"
           >
-            <Plus size={20} />
+            <Plus size={18} className="md:w-5 md:h-5" />
             新建目标
           </button>
         </div>
       </header>
 
-      <div className="flex-1 overflow-y-auto pr-2 space-y-8">
+      <div className="flex-1 overflow-y-auto pr-1 md:pr-2 space-y-6 md:space-y-8 pb-4 md:pb-0">
         {activeGoals.length > 0 && (
           <section>
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-primary" />
               进行中
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {activeGoals.map(renderGoalCard)}
             </div>
           </section>
@@ -138,20 +138,20 @@ export const Goals: React.FC = () => {
 
         {completedGoals.length > 0 && (
           <section className="opacity-70">
-            <h2 className="text-xl font-semibold mb-4 flex items-center gap-2 text-text-muted">
+            <h2 className="text-lg md:text-xl font-semibold mb-3 md:mb-4 flex items-center gap-2 text-text-muted">
               <span className="w-2 h-2 rounded-full bg-green-500" />
               已完成
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
               {completedGoals.map(renderGoalCard)}
             </div>
           </section>
         )}
 
         {filteredGoals.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-64 text-text-muted">
-            <Target size={48} className="mb-4 opacity-20" />
-            <p>暂无目标，点击右上角新建一个吧。</p>
+          <div className="flex flex-col items-center justify-center h-48 md:h-64 text-text-muted">
+            <Target size={40} className="mb-4 opacity-20 md:w-12 md:h-12" />
+            <p className="text-sm md:text-base">暂无目标，点击右上角新建一个吧。</p>
           </div>
         )}
       </div>
