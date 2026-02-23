@@ -15,7 +15,7 @@ export const Sidebar: React.FC = () => {
   ];
 
   return (
-    <aside className="w-64 h-screen bg-surface border-r border-border flex flex-col transition-colors duration-300">
+    <aside className="w-64 h-[100dvh] bg-surface border-r border-border flex flex-col transition-colors duration-300">
       <div className="p-6 flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden">
           {userStats.profile.avatar ? (
