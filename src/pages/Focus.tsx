@@ -64,7 +64,7 @@ export const Focus: React.FC = () => {
   const progress = ((duration * 60 - timeLeft) / (duration * 60)) * 100;
 
   return (
-    <div className="h-full flex flex-col items-center justify-center relative overflow-hidden rounded-2xl md:rounded-3xl bg-surface border border-border shadow-sm transition-colors duration-1000">
+    <div className="flex-1 flex flex-col items-center justify-center relative overflow-hidden rounded-2xl md:rounded-3xl bg-surface border border-border shadow-sm transition-colors duration-1000">
       {/* Dynamic Background elements - Only visible when active */}
       <AnimatePresence>
         {status === 'running' && (

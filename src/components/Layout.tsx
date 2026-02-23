@@ -13,12 +13,12 @@ export const Layout: React.FC = () => {
         <Sidebar />
       </div>
       <TopNav />
-      <main className="flex-1 overflow-y-auto relative pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-0 pt-[calc(env(safe-area-inset-top)+4rem)] md:pt-0">
+      <main className="flex-1 flex flex-col overflow-y-auto relative pb-[calc(env(safe-area-inset-bottom)+5rem)] md:pb-0 pt-[calc(env(safe-area-inset-top)+4rem)] md:pt-0">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          className="h-full p-4 md:p-8 max-w-7xl mx-auto"
+          className="flex-1 w-full p-4 md:p-8 max-w-7xl mx-auto flex flex-col"
         >
           <Outlet />
         </motion.div>

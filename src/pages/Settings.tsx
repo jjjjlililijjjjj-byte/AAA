@@ -35,7 +35,7 @@ export const Settings: React.FC = () => {
   ];
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <header className="mb-6 md:mb-8">
         <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">设置</h1>
         <p className="text-sm md:text-base text-text-muted">定制你的专属空间。</p>

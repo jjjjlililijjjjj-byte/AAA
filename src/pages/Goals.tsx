@@ -96,7 +96,7 @@ export const Goals: React.FC = () => {
   };
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex-1 flex flex-col overflow-hidden">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 md:mb-8">
         <div>
           <h1 className="text-3xl md:text-4xl font-light tracking-tight mb-1 md:mb-2">长期目标</h1>
