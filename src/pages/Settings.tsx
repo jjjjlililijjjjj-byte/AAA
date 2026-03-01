@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Palette, User, Cloud, LogOut, Upload, ChevronRight } from 'lucide-react';
-import { useAppContext } from '../context/AppContext';
+import { Palette, User, Cloud, LogOut, Upload as UploadIcon, ChevronRight, Database, Download } from 'lucide-react';
+import { useAppContext, Task, Quadrant } from '../context/AppContext';
 import { cn } from '../utils/cn';
+import { format } from 'date-fns';
 
 export const Settings: React.FC = () => {
-  const { userStats, setTheme, updateProfile } = useAppContext();
-  const [activeTab, setActiveTab] = useState<'appearance' | 'account'>('appearance');
+  const { userStats, setTheme, updateProfile, tasks, importTasks } = useAppContext();
+  const [activeTab, setActiveTab] = useState<'appearance' | 'account' | 'data'>('appearance');
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [editName, setEditName] = useState('');
   const [editAvatar, setEditAvatar] = useState('');
@@ -22,6 +23,77 @@ export const Settings: React.FC = () => {
       updateProfile({ name: editName.trim(), avatar: editAvatar.trim() || undefined });
     }
     setIsEditingProfile(false);
+  };
+
+  const exportCSV = () => {
+    const headers = ['标题', '日期', '开始时间', '结束时间', '象限', '是否完成', '时长(分钟)', '重复规则'];
+    const csvContent = [
+      headers.join(','),
+      ...tasks.map(t => [
+        `"${t.title.replace(/"/g, '""')}"`,
+        t.date,
+        t.startTime || '',
+        t.endTime || '',
+        t.quadrant,
+        t.completed ? '是' : '否',
+        t.duration || 60,
+        t.repeat || 'none'
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob(['\uFEFF' + csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `SereneFlow_Tasks_${format(new Date(), 'yyyyMMdd')}.csv`;
+    link.click();
+  };
+
+  const importCSV = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result as string;
+        const lines = text.split('\n').filter(line => line.trim());
+        if (lines.length < 2) {
+          alert('CSV 文件为空或格式不正确');
+          return;
+        }
+
+        const newTasks: Task[] = [];
+        for (let i = 1; i < lines.length; i++) {
+          const row = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(s => s.replace(/^"|"$/g, '').replace(/""/g, '"'));
+          
+          if (row.length >= 8) {
+            newTasks.push({
+              id: Date.now().toString() + Math.random().toString(36).substr(2, 9),
+              title: row[0] || '未命名任务',
+              date: row[1] || format(new Date(), 'yyyy-MM-dd'),
+              startTime: row[2] || undefined,
+              endTime: row[3] || undefined,
+              quadrant: (['A', 'B', 'C', 'D'].includes(row[4]) ? row[4] : 'A') as Quadrant,
+              completed: row[5] === '是',
+              duration: parseInt(row[6]) || 60,
+              repeat: (['none', 'daily', 'weekly', 'monthly', 'custom'].includes(row[7]) ? row[7] : 'none') as any,
+            });
+          }
+        }
+        
+        if (newTasks.length > 0) {
+          importTasks(newTasks);
+          alert(`成功导入 ${newTasks.length} 条任务！`);
+        } else {
+          alert('未能从文件中解析出有效任务。');
+        }
+      } catch (error) {
+        console.error('Import error:', error);
+        alert('导入失败，请检查 CSV 文件格式。');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
   };
 
   const themes = [
@@ -63,6 +135,16 @@ export const Settings: React.FC = () => {
           >
             <User size={18} className="md:w-5 md:h-5" />
             个人账户
+          </button>
+          <button
+            onClick={() => setActiveTab('data')}
+            className={cn(
+              "flex items-center gap-2 md:gap-3 px-4 py-2.5 md:py-3 rounded-xl transition-all text-sm md:text-base whitespace-nowrap",
+              activeTab === 'data' ? "bg-surface border border-border font-medium shadow-sm" : "text-text-muted hover:bg-surface/50"
+            )}
+          >
+            <Database size={18} className="md:w-5 md:h-5" />
+            数据管理
           </button>
         </div>
 
@@ -126,7 +208,7 @@ export const Settings: React.FC = () => {
                   </div>
                   {!isEditingProfile && (
                     <div className="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-100 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                      <Upload className="text-white md:w-6 md:h-6" size={20} />
+                      <UploadIcon className="text-white md:w-6 md:h-6" size={20} />
                     </div>
                   )}
                 </div>
@@ -215,6 +297,41 @@ export const Settings: React.FC = () => {
                   <LogOut size={18} className="md:w-5 md:h-5" />
                   退出登录
                 </button>
+              </div>
+            </motion.div>
+          )}
+
+          {activeTab === 'data' && (
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 md:space-y-8 max-w-2xl">
+              <div>
+                <h2 className="text-xl md:text-2xl font-semibold mb-4 md:mb-6">数据导入与导出</h2>
+                <div className="space-y-4">
+                  <div className="p-4 md:p-6 bg-bg rounded-2xl border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <h4 className="font-medium text-base md:text-lg mb-1">导出任务数据</h4>
+                      <p className="text-sm text-text-muted">将所有任务导出为 CSV 格式文件，方便在 Excel 或其他软件中查看。</p>
+                    </div>
+                    <button 
+                      onClick={exportCSV} 
+                      className="flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-white rounded-xl text-sm font-medium hover:bg-opacity-90 transition-colors w-full sm:w-auto flex-shrink-0 shadow-sm"
+                    >
+                      <Download size={18} /> 
+                      导出 CSV
+                    </button>
+                  </div>
+                  
+                  <div className="p-4 md:p-6 bg-bg rounded-2xl border border-border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                      <h4 className="font-medium text-base md:text-lg mb-1">导入任务数据</h4>
+                      <p className="text-sm text-text-muted">从 CSV 文件中批量导入任务。请确保文件格式与导出的格式一致。</p>
+                    </div>
+                    <label className="flex items-center justify-center gap-2 px-6 py-2.5 bg-surface border border-border text-text rounded-xl text-sm font-medium cursor-pointer hover:bg-bg transition-colors w-full sm:w-auto flex-shrink-0 shadow-sm">
+                      <UploadIcon size={18} /> 
+                      导入 CSV
+                      <input type="file" accept=".csv" className="hidden" onChange={importCSV} />
+                    </label>
+                  </div>
+                </div>
               </div>
             </motion.div>
           )}

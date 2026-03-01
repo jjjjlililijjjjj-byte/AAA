@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, Medal } from 'lucide-react';
+import { Sparkles, Medal, Hourglass } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 
@@ -10,9 +10,7 @@ export const TopNav: React.FC = () => {
     <header className="md:hidden fixed top-0 left-0 right-0 h-[calc(env(safe-area-inset-top)+4rem)] bg-surface/80 backdrop-blur-md border-b border-border flex items-center justify-between px-4 z-40 pt-safe">
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 rounded-xl bg-primary flex items-center justify-center text-white shadow-sm transform -rotate-6">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5 transform rotate-6">
-            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-          </svg>
+          <Hourglass size={20} className="transform rotate-6" />
         </div>
         <span className="font-bold text-lg tracking-tight text-text">SereneFlow</span>
       </div>

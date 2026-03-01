@@ -16,6 +16,7 @@ export interface Task {
   repeat?: RepeatType;
   repeatCustomDays?: number[]; // 0-6 for Sunday-Saturday
   parentId?: string; // If this is a generated instance of a repeating task
+  dependencies?: string[]; // IDs of tasks this task depends on
 }
 
 export interface Goal {
@@ -65,6 +66,8 @@ interface AppContextType {
   setTheme: (theme: UserStats['theme']) => void;
   unlockMedal: (medalId: string) => void;
   updateProfile: (profile: Partial<UserProfile>) => void;
+  importTasks: (newTasks: Task[]) => void;
+  reorderTasks: (activeId: string, overId: string) => void;
   rewardPopup: { show: boolean; increment: number; seeds: number; goal?: Goal } | null;
   setRewardPopup: (popup: { show: boolean; increment: number; seeds: number; goal?: Goal } | null) => void;
 }
@@ -79,37 +82,70 @@ const defaultMedals: Medal[] = [
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
-export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [tasks, setTasks] = useState<Task[]>([
-    { id: '1', title: '完成PRD初稿', date: new Date().toISOString().split('T')[0], startTime: '09:00', endTime: '11:00', quadrant: 'A', completed: false, duration: 120, repeat: 'none' },
-    { id: '2', title: '阅读《设计心理学》', date: new Date().toISOString().split('T')[0], startTime: '14:00', endTime: '15:00', quadrant: 'B', completed: false, goalId: 'g1', duration: 60, repeat: 'none' },
-  ]);
-  
-  const [goals, setGoals] = useState<Goal[]>([
-    { id: 'g1', title: '阅读 5 本书', totalTasks: 5, completedTasks: 2, status: 'active' },
-  ]);
+const loadFromStorage = <T,>(key: string, defaultValue: T): T => {
+  try {
+    const saved = localStorage.getItem(key);
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error(`Error loading ${key} from localStorage`, e);
+  }
+  return defaultValue;
+};
 
-  const [userStats, setUserStats] = useState<UserStats>({
-    seeds: 120,
-    focusTime: 340,
+export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [tasks, setTasks] = useState<Task[]>(() => loadFromStorage('sereneflow_tasks', []));
+  
+  const [goals, setGoals] = useState<Goal[]>(() => loadFromStorage('sereneflow_goals', []));
+
+  const [userStats, setUserStats] = useState<UserStats>(() => loadFromStorage('sereneflow_userStats', {
+    seeds: 0,
+    focusTime: 0,
     theme: 'default',
     medals: defaultMedals,
     profile: {
       name: '探索者',
     }
-  });
+  }));
 
   const [rewardPopup, setRewardPopup] = useState<{ show: boolean; increment: number; seeds: number; goal?: Goal } | null>(null);
 
   useEffect(() => {
+    localStorage.setItem('sereneflow_tasks', JSON.stringify(tasks));
+  }, [tasks]);
+
+  useEffect(() => {
+    localStorage.setItem('sereneflow_goals', JSON.stringify(goals));
+  }, [goals]);
+
+  useEffect(() => {
+    localStorage.setItem('sereneflow_userStats', JSON.stringify(userStats));
     document.documentElement.className = userStats.theme === 'default' ? '' : `theme-${userStats.theme}`;
-  }, [userStats.theme]);
+  }, [userStats]);
 
   const updateProfile = (profileUpdates: Partial<UserProfile>) => {
     setUserStats(prev => ({
       ...prev,
       profile: { ...prev.profile, ...profileUpdates }
     }));
+  };
+
+  const importTasks = (newTasks: Task[]) => {
+    setTasks(prev => [...prev, ...newTasks]);
+  };
+
+  const reorderTasks = (activeId: string, overId: string) => {
+    setTasks(prev => {
+      const activeIndex = prev.findIndex(t => t.id === activeId);
+      const overIndex = prev.findIndex(t => t.id === overId);
+      if (activeIndex === -1 || overIndex === -1) return prev;
+      
+      const newTasks = [...prev];
+      const [movedTask] = newTasks.splice(activeIndex, 1);
+      newTasks.splice(overIndex, 0, movedTask);
+      return newTasks;
+    });
   };
 
   const addTask = (task: Omit<Task, 'id'>) => {
@@ -196,7 +232,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       tasks, goals, userStats,
       addTask, updateTask, deleteTask,
       addGoal, updateGoal, deleteGoal,
-      addFocusTime, addSeeds, setTheme, unlockMedal, updateProfile,
+      addFocusTime, addSeeds, setTheme, unlockMedal, updateProfile, importTasks, reorderTasks,
       rewardPopup, setRewardPopup
     }}>
       {children}

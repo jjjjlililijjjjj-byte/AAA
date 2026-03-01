@@ -31,6 +31,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
   const [repeat, setRepeat] = useState<RepeatType>('none');
   const [repeatCustomDays, setRepeatCustomDays] = useState<number[]>([]);
   const [goalId, setGoalId] = useState<string | undefined>(undefined);
+  const [dependencies, setDependencies] = useState<string[]>([]);
 
   useEffect(() => {
     if (initialTask) {
@@ -42,6 +43,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       setRepeat(initialTask.repeat || 'none');
       setRepeatCustomDays(initialTask.repeatCustomDays || []);
       setGoalId(initialTask.goalId);
+      setDependencies(initialTask.dependencies || []);
     } else {
       setTitle('');
       setDate(selectedDate ? format(selectedDate, 'yyyy-MM-dd') : format(new Date(), 'yyyy-MM-dd'));
@@ -51,6 +53,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       setRepeat('none');
       setRepeatCustomDays([]);
       setGoalId(undefined);
+      setDependencies([]);
     }
   }, [initialTask, selectedDate, isOpen]);
 
@@ -76,6 +79,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       repeat,
       repeatCustomDays: repeat === 'custom' ? repeatCustomDays : undefined,
       goalId,
+      dependencies,
       ...(initialTask ? { id: initialTask.id, parentId: initialTask.parentId } : {})
     };
 
@@ -235,6 +239,24 @@ export const TaskModal: React.FC<TaskModalProps> = ({
                   <option key={goal.id} value={goal.id}>{goal.title}</option>
                 ))}
               </select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-text-muted mb-2">前置任务 (依赖)</label>
+              <select
+                multiple
+                value={dependencies}
+                onChange={(e) => {
+                  const values = Array.from(e.target.selectedOptions, (option: HTMLOptionElement) => option.value);
+                  setDependencies(values);
+                }}
+                className="w-full bg-bg border border-border rounded-xl px-4 py-3 text-text focus:outline-none focus:border-primary transition-colors min-h-[100px]"
+              >
+                {useAppContext().tasks.filter(t => t.id !== initialTask?.id && !t.parentId).map(t => (
+                  <option key={t.id} value={t.id}>{t.title}</option>
+                ))}
+              </select>
+              <p className="text-xs text-text-muted mt-1">按住 Ctrl/Cmd 多选</p>
             </div>
           </div>
 
