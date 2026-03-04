@@ -78,17 +78,12 @@ export const Home: React.FC = () => {
   // Generate task instances for the current view
   const displayTasks = useMemo(() => {
     let start, end;
-    if (viewMode === 'timeline') {
-      if (daysView === 'month') {
-        start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
-        end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 1 });
-      } else {
-        start = currentDate;
-        end = addDays(currentDate, daysView as number - 1);
-      }
+    if (daysView === 'month') {
+      start = startOfWeek(startOfMonth(currentDate), { weekStartsOn: 1 });
+      end = endOfWeek(endOfMonth(currentDate), { weekStartsOn: 1 });
     } else {
       start = currentDate;
-      end = currentDate;
+      end = addDays(currentDate, daysView as number - 1);
     }
 
     const allDays = eachDayOfInterval({ start, end });
@@ -246,8 +241,9 @@ export const Home: React.FC = () => {
                         }}
                         className={cn(
                           "text-xs px-2 py-1 rounded-md border truncate transition-all hover:opacity-80 flex items-center gap-1",
-                          quadColors[task.quadrant],
-                          task.completed ? "opacity-50 line-through" : ""
+                          task.completed 
+                            ? "bg-border/20 border-border text-text-muted opacity-70 line-through" 
+                            : quadColors[task.quadrant]
                         )}
                       >
                         <div
@@ -378,8 +374,9 @@ export const Home: React.FC = () => {
                                   <div
                                     className={cn(
                                       "rounded-xl border p-2 md:p-3 cursor-pointer transition-all hover:shadow-md flex flex-col gap-1",
-                                      quadColors[task.quadrant],
-                                      task.completed ? "opacity-50" : "hover:scale-[1.02]"
+                                      task.completed 
+                                        ? "bg-border/20 border-border text-text-muted opacity-70" 
+                                        : cn(quadColors[task.quadrant], "hover:scale-[1.02]")
                                     )}
                                     style={{ minHeight: `${Math.max(60, task.duration || 60)}px` }}
                                     onClick={(e) => {
@@ -453,7 +450,15 @@ export const Home: React.FC = () => {
   };
 
   const renderQuadrants = () => {
-    const todayTasks = displayTasks.filter(t => t.date === format(currentDate, 'yyyy-MM-dd'));
+    const uniqueTasksMap = new Map<string, Task>();
+    displayTasks.forEach(t => {
+      const id = t.parentId || t.id;
+      if (!uniqueTasksMap.has(id) || (!t.completed && uniqueTasksMap.get(id)?.completed)) {
+        uniqueTasksMap.set(id, t);
+      }
+    });
+    const quadrantTasks = Array.from(uniqueTasksMap.values());
+
     const quads: { id: Quadrant; label: string; color: string }[] = [
       { id: 'A', label: '重要且紧急', color: 'border-[var(--quad-a)]' },
       { id: 'B', label: '重要不紧急', color: 'border-[var(--quad-b)]' },
@@ -472,11 +477,16 @@ export const Home: React.FC = () => {
               </span>
             </div>
             <div className="flex-1 overflow-y-auto space-y-2 md:space-y-3 pr-1 md:pr-2">
-              <SortableContext items={todayTasks.filter(t => t.quadrant === q.id).map(t => t.id)} strategy={verticalListSortingStrategy}>
-                {todayTasks.filter(t => t.quadrant === q.id).map(task => (
+              <SortableContext items={quadrantTasks.filter(t => t.quadrant === q.id).map(t => t.id)} strategy={verticalListSortingStrategy}>
+                {quadrantTasks.filter(t => t.quadrant === q.id).map(task => (
                   <SortableItem key={task.id} id={task.id}>
                     <div
-                      className="flex items-center justify-between p-3 md:p-4 bg-bg rounded-2xl border border-border hover:border-primary transition-colors cursor-pointer group"
+                      className={cn(
+                        "flex items-center justify-between p-3 md:p-4 rounded-2xl border transition-colors cursor-pointer group",
+                        task.completed 
+                          ? "bg-border/20 border-border opacity-70" 
+                          : "bg-bg border-border hover:border-primary"
+                      )}
                       onClick={() => openTaskModal(task)}
                     >
                       <div className="flex items-center gap-2 md:gap-3 min-w-0">
@@ -574,35 +584,33 @@ export const Home: React.FC = () => {
         </div>
       </header>
 
-      {viewMode === 'timeline' && (
-        <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 mb-4 md:mb-6">
-          <div className="flex gap-1 md:gap-2 bg-bg p-1 rounded-full border border-border overflow-x-auto scrollbar-hide">
-            {['month', 1, 2, 3, 7].map(d => (
-              <button
-                key={d}
-                onClick={() => setDaysView(d as any)}
-                className={cn(
-                  "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap",
-                  daysView === d ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text"
-                )}
-              >
-                {d === 'month' ? '月' : `${d}日`}
-              </button>
-            ))}
-          </div>
-          <div className="flex items-center justify-between md:justify-center gap-2 md:gap-4 bg-surface px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border">
-            <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
-              <ChevronLeft size={20} className="md:w-5 md:h-5" />
+      <div className="flex flex-col md:flex-row justify-between items-stretch md:items-center gap-3 mb-4 md:mb-6">
+        <div className="flex gap-1 md:gap-2 bg-bg p-1 rounded-full border border-border overflow-x-auto scrollbar-hide">
+          {['month', 1, 2, 3, 7].map(d => (
+            <button
+              key={d}
+              onClick={() => setDaysView(d as any)}
+              className={cn(
+                "px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap",
+                daysView === d ? "bg-primary text-white shadow-sm" : "text-text-muted hover:text-text"
+              )}
+            >
+              {d === 'month' ? '月' : `${d}日`}
             </button>
-            <span className="font-medium text-sm md:text-lg min-w-[100px] md:min-w-[120px] text-center">
-              {format(currentDate, 'yyyy年 MM月', { locale: zhCN })}
-            </span>
-            <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
-              <ChevronRight size={20} className="md:w-5 md:h-5" />
-            </button>
-          </div>
+          ))}
         </div>
-      )}
+        <div className="flex items-center justify-between md:justify-center gap-2 md:gap-4 bg-surface px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-border">
+          <button onClick={prevPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+            <ChevronLeft size={20} className="md:w-5 md:h-5" />
+          </button>
+          <span className="font-medium text-sm md:text-lg min-w-[100px] md:min-w-[120px] text-center">
+            {format(currentDate, 'yyyy年 MM月', { locale: zhCN })}
+          </span>
+          <button onClick={nextPeriod} className="text-text-muted hover:text-primary transition-colors p-2">
+            <ChevronRight size={20} className="md:w-5 md:h-5" />
+          </button>
+        </div>
+      </div>
 
       {viewMode === 'timeline' ? renderTimeline() : renderQuadrants()}
 
